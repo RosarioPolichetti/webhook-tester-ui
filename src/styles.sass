@@ -1,0 +1,27 @@
+$mobile-width: 600px
+
+
+nz-header
+  & > h1
+    color: white
+    text-align: center
+
+nz-layout
+  min-height: 100vh !important
+
+nz-content
+  padding: 24px 50px
+  & nz-empty
+    margin: 32px auto !important
+
+.w-full
+  width: 100%
+
+@media only screen and (width <= $mobile-width)
+  .ant-col, .ant-col-12
+    flex: 1 1 100%
+    max-width: 100%
+    & > button
+      width: 100%
+  nz-footer p
+    text-align: center

@@ -1,0 +1,20 @@
+<nz-layout>
+  <nz-header>
+    <h1>Webhook Tester</h1>
+  </nz-header>
+  <nz-content>
+    <nz-spin
+      [nzSpinning]="isLoading()"
+      nzSize="large"
+    >
+      <app-webhook-list></app-webhook-list>
+    </nz-spin>
+  </nz-content>
+  <nz-footer>
+    <div nz-row nzJustify="center" [nzGutter]="[16, 16]">
+      <div nz-col>
+        <p>All rights reserved to Enrico Barbato and Rosario Polichetti</p>
+      </div>
+    </div>
+  </nz-footer>
+</nz-layout>
