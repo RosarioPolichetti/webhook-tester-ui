@@ -1,4 +1,4 @@
-import {Component, input, signal} from '@angular/core';
+import {Component, computed, effect, input, signal} from '@angular/core';
 import {NzCardComponent} from "ng-zorro-antd/card";
 import {NzTagComponent} from "ng-zorro-antd/tag";
 import {NzCollapseComponent, NzCollapsePanelComponent} from "ng-zorro-antd/collapse";
@@ -6,6 +6,8 @@ import {NzColDirective, NzRowDirective} from "ng-zorro-antd/grid";
 import {HttpClientService} from "../../http-client.service";
 import {finalize, tap} from "rxjs";
 import {NzSpinComponent} from "ng-zorro-antd/spin";
+import {NzIconDirective} from "ng-zorro-antd/icon";
+import {NzModalComponent} from "ng-zorro-antd/modal";
 
 @Component({
   selector: 'app-webhook-card',
@@ -17,7 +19,9 @@ import {NzSpinComponent} from "ng-zorro-antd/spin";
     NzCollapsePanelComponent,
     NzRowDirective,
     NzColDirective,
-    NzSpinComponent
+    NzSpinComponent,
+    NzIconDirective,
+    NzModalComponent
   ],
   templateUrl: './webhook-card.component.html',
   styleUrl: './webhook-card.component.sass'
@@ -32,10 +36,14 @@ export class WebhookCardComponent {
 
   isLoadingBodyMessage = signal<boolean>(true)
   messageBody = signal<any>('');
+  showDetail = signal<boolean>(false);
 
   constructor(
     private httpClientService: HttpClientService
   ) {
+    effect(() => {
+      this.onActiveModal(this.showDetail());
+    })
   }
 
   onActiveModal($event: boolean) {

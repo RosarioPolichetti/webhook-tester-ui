@@ -44,7 +44,9 @@ export class WebhookListComponent implements OnInit {
   readonly messages = this.webhookListService.messages;
 
   isFilterDropdownVisible = signal<boolean>(false);
+  isTimerDropdownVisible = signal<boolean>(false);
   areFiltersSelected = signal<boolean>(false);
+  areTimerFiltersSelected = signal<boolean>(false);
 
   selectedPaths = [];
   readonly UnitTime = UnitTime;
@@ -69,8 +71,8 @@ export class WebhookListComponent implements OnInit {
   onCloseFilterModal() {
     this.form.patchValue({
       visibleRequestsMaxNumber: 100,
-      refreshNumber: 59,
-      unitTime: UnitTime.Seconds
+      serverTimeout: null,
+      responseStatusCode: null
     });
     this.isFilterDropdownVisible.set(false);
     this.areFiltersSelected.set(false);
@@ -86,17 +88,28 @@ export class WebhookListComponent implements OnInit {
     const maxNumberMessages = this.form.get('visibleRequestsMaxNumber')?.value;
     const responseStatusCode = this.form.get('responseStatusCode')?.value || null;
     const serverTimeout = this.form.get('serverTimeout')?.value || null;
+    this.areTimerFiltersSelected.set(false);
+    this.webhookListService.removeRefreshSubscription();
     this.webhookListService.retrieveMessages$(maxNumberMessages, responseStatusCode, serverTimeout, this.selectedPaths).subscribe()
   }
 
   onUpdateRefreshRate() {
-    this.isFilterDropdownVisible.set(false);
-    this.areFiltersSelected.set(true);
+    this.isTimerDropdownVisible.set(false);
+    this.areTimerFiltersSelected.set(true);
     const maxNumberMessages = this.form.get('visibleRequestsMaxNumber')?.value;
     const responseStatusCode = this.form.get('responseStatusCode')?.value || null;
     const serverTimeout = this.form.get('serverTimeout')?.value || null;
     const refreshNumber = this.form.get('refreshNumber')?.value;
     const unitTime = this.form.get('unitTime')?.value;
     this.webhookListService.updateRefreshRate(maxNumberMessages, responseStatusCode, serverTimeout, this.selectedPaths, refreshNumber, unitTime);
+  }
+
+  onCloseTimerModal() {
+    this.form.patchValue({
+      refreshNumber: 59,
+      unitTime: UnitTime.Seconds
+    });
+    this.isTimerDropdownVisible.set(false);
+    this.areTimerFiltersSelected.set(false);
   }
 }

@@ -45,4 +45,8 @@ export class WebhookListService {
       switchMap(() => this.retrieveMessages$(maxNumberMessages, serverTimeout, responseStatusCode, selectedPaths))
     ).subscribe();
   }
+
+  removeRefreshSubscription() {
+    this.refreshSubscription?.unsubscribe();
+  }
 }
