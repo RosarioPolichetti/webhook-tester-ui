@@ -4,19 +4,28 @@
       <div nz-col nzFlex="1">
         <nz-select
           nzMode="multiple"
-          nzPlaceHolder="Select one or more UUID"
+          nzPlaceHolder="Select one or more paths"
           [nzOptions]="options()"
           [(ngModel)]="selectedPaths"
           class="w-full"
         ></nz-select>
       </div>
       <div nz-col>
-    <span
+        <span
       nz-icon
       nzType="filter"
       [nzTheme]="areFiltersSelected() ? 'twotone' : 'outline'"
       (click)="isFilterDropdownVisible.set(!isFilterDropdownVisible())"
     >
+    </span>
+      </div>
+      <div nz-col>
+        <span
+          nz-icon
+          nzType="clock-circle"
+          [nzTheme]="areTimerFiltersSelected() ? 'twotone' : 'outline'"
+          (click)="isTimerDropdownVisible.set(!isTimerDropdownVisible())"
+        >
     </span>
       </div>
       <div nz-col>
@@ -47,12 +56,24 @@
 </div>
 
 <nz-modal
+  #filterModal
   [nzVisible]="isFilterDropdownVisible()"
   (nzOnCancel)="onCloseFilterModal()"
   (nzVisibleChange)="isFilterDropdownVisible.set(!isFilterDropdownVisible())"
   nzTitle="Filters"
   [nzContent]="filterContentTmpl"
   [nzFooter]="filterFooterTmpl"
+>
+</nz-modal>
+
+<nz-modal
+  #timeModal
+  [nzVisible]="isTimerDropdownVisible()"
+  (nzOnCancel)="onCloseTimerModal()"
+  (nzVisibleChange)="isTimerDropdownVisible.set(!isTimerDropdownVisible())"
+  nzTitle="Timers"
+  [nzContent]="timerContentTmpl"
+  [nzFooter]="timerFooterTmpl"
 >
 </nz-modal>
 
@@ -66,7 +87,7 @@
           <nz-form-control>
             <input nz-input type="number" formControlName="visibleRequestsMaxNumber">
           </nz-form-control>
-        </nz-form-item >
+        </nz-form-item>
       </div>
 
       <div nz-col nzSpan="24">
@@ -75,7 +96,7 @@
           <nz-form-control>
             <input nz-input formControlName="responseStatusCode">
           </nz-form-control>
-        </nz-form-item >
+        </nz-form-item>
       </div>
 
       <div nz-col nzSpan="24">
@@ -84,46 +105,11 @@
           <nz-form-control>
             <input nz-input type="number" formControlName="serverTimeout">
           </nz-form-control>
-        </nz-form-item >
-      </div>
-
-      <div nz-col nzSpan="24">
-        <br>
-        <h3>Refresh: </h3>
-      </div>
-      <div nz-col nzSpan="8">
-        <nz-form-item>
-          <nz-form-label>Refresh number</nz-form-label>
-          <nz-form-control>
-            <input nz-input type="number" formControlName="refreshNumber">
-          </nz-form-control>
-        </nz-form-item >
-      </div>
-      <div nz-col nzSpan="8">
-        <nz-form-item>
-          <nz-form-label>Unit time</nz-form-label>
-          <nz-form-control>
-            <nz-select formControlName="unitTime">
-              <nz-option [nzValue]="UnitTime.Seconds" [nzLabel]="UnitTime.Seconds"></nz-option>
-              <nz-option [nzValue]="UnitTime.Minutes" [nzLabel]="UnitTime.Minutes"></nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item >
-      </div>
-      <div nz-col nzSpan="8">
-        <button
-          nz-button
-          nzType="primary"
-          class="w-full"
-          (click)="onUpdateRefreshRate()"
-        >
-          Save refresh
-        </button>
+        </nz-form-item>
       </div>
     </div>
   </form>
 </ng-template>
-
 
 <ng-template #filterFooterTmpl>
   <div nz-row nzJustify="space-between" [nzGutter]="[16, 16]">
@@ -132,6 +118,44 @@
     </div>
     <div nz-col>
       <button nz-button nzType="primary" (click)="onUpdateFilter()">Save</button>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #timerContentTmpl>
+  <form nz-form [formGroup]="form">
+    <div nz-row [nzGutter]="[16, 8]" nzAlign="bottom">
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label>Refresh number</nz-form-label>
+          <nz-form-control>
+            <input nz-input type="number" formControlName="refreshNumber">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label>Unit time</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="unitTime">
+              <nz-option [nzValue]="UnitTime.Seconds" [nzLabel]="UnitTime.Seconds"></nz-option>
+              <nz-option [nzValue]="UnitTime.Minutes" [nzLabel]="UnitTime.Minutes"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #timerFooterTmpl>
+  <div nz-row nzJustify="space-between" [nzGutter]="[16, 16]">
+    <div nz-col>
+      <button nz-button (click)="onCloseTimerModal()">Cancel</button>
+    </div>
+    <div nz-col>
+      <button nz-button nzType="primary" (click)="onUpdateRefreshRate()">Save</button>
     </div>
   </div>
 </ng-template>

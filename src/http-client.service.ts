@@ -51,7 +51,7 @@ export class HttpClientService {
         // TODO: Create an error list
         this.notificationService.create(
           'error',
-          'Unable to retrieve notification',
+          'Unable to retrieve messages',
           ''
         )
         return EMPTY;
