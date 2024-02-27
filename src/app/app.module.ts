@@ -13,8 +13,9 @@ import it from '@angular/common/locales/it';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {NzModalModule, NzModalService} from "ng-zorro-antd/modal";
+import {NzModalModule} from "ng-zorro-antd/modal";
 import {NzSpinComponent} from "ng-zorro-antd/spin";
+import {NzIconDirective} from "ng-zorro-antd/icon";
 
 registerLocaleData(it);
 
@@ -36,7 +37,8 @@ registerLocaleData(it);
     HttpClientModule,
     BrowserAnimationsModule,
     NzModalModule,
-    NzSpinComponent
+    NzSpinComponent,
+    NzIconDirective
   ],
   providers: [
     { provide: NZ_I18N, useValue: it_IT }

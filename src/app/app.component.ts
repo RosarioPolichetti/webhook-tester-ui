@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClientService} from "../http-client.service";
+import {environment} from "../environments/environment";
 
 @Component({
   selector: 'app-root',
@@ -8,6 +9,8 @@ import {HttpClientService} from "../http-client.service";
 })
 export class AppComponent implements OnInit{
   readonly isLoading = this.httpClientService.isLoading;
+  readonly baseUrl = environment.baseUrl;
+
   title = 'webhook-tester';
 
   constructor(
@@ -16,4 +19,9 @@ export class AppComponent implements OnInit{
 
   ngOnInit(): void {
   }
+
+  openUrl(url: string) {
+    window.open(url);
+  }
+
 }

@@ -4,6 +4,7 @@ import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {environment} from "./environments/environment";
 import {Message, Path} from "./webhook-list/webhook-card/webhook.model";
 import {NzNotificationService} from "ng-zorro-antd/notification";
+import {Order, PathOrderBy} from "./webhook-list/webhook-list.component";
 
 @Injectable({
   providedIn: 'root'
@@ -25,10 +26,14 @@ export class HttpClientService {
     )
   }
 
-  retrievePaths$(): Observable<string[]> {
+  retrievePaths$(orderBy = PathOrderBy.TotalMessage, order = Order.Descending): Observable<Path[]> {
+    return this.doRequest$(this._retrievePaths$(orderBy, order));
+  }
+
+  private _retrievePaths$(orderBy = PathOrderBy.TotalMessage, order = Order.Descending): Observable<Path[]> {
     const url = [this.BASE_URL, 'api/v1/paths'].join('/')
-    const headers = new HttpHeaders({'ngrok-skip-browser-warning': 1});
-    return this.http.get<Path[]>(url, {headers}).pipe(map(resp => resp.map(value => value.path)));
+    const params = new HttpParams().set('orderBy', orderBy).set('order', order);
+    return this.http.get<Path[]>(url, {params});
   }
 
   retrieveMessages$(maxNumberMessages = 100, serverTimeout: number | null = null, responseStatusCode: number | null = null, pathsToInclude: string[] | null = null): Observable<Message[]> {
@@ -59,10 +64,10 @@ export class HttpClientService {
     );
   }
 
-  retrievePathsAndMessages$() {
+  retrievePathsAndMessages$(orderBy = PathOrderBy.TotalMessage, order = Order.Descending) {
     return this.doRequest$(
       forkJoin({
-        paths: this.retrievePaths$(),
+        paths: this._retrievePaths$(orderBy, order),
         messages: this.retrieveMessages$()
       })
     );

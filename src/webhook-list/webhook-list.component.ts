@@ -38,8 +38,8 @@ export class WebhookListComponent implements OnInit {
   form: FormGroup;
 
   readonly paths = this.webhookListService.paths;
-  readonly options = computed(() => this.paths().map(uuid => {
-    return {value: uuid, label: uuid}
+  readonly options = computed(() => this.paths().map(path => {
+    return {value: path.path, label: path.path +  ' (total messages: ' + path.totalMessage + ')'}
   }))
   readonly messages = this.webhookListService.messages;
 
@@ -47,6 +47,10 @@ export class WebhookListComponent implements OnInit {
   isTimerDropdownVisible = signal<boolean>(false);
   areFiltersSelected = signal<boolean>(false);
   areTimerFiltersSelected = signal<boolean>(false);
+  private _$isPathDropdownVisible = signal<boolean>(false);
+  readonly $isPathDropdownVisible = this._$isPathDropdownVisible.asReadonly();
+  set isPathDropdownVisible(value: boolean) { this._$isPathDropdownVisible.set(value); }
+
 
   selectedPaths = [];
   readonly UnitTime = UnitTime;
@@ -60,7 +64,9 @@ export class WebhookListComponent implements OnInit {
       responseStatusCode: [null],
       serverTimeout: [null],
       refreshNumber: [59],
-      unitTime: [UnitTime.Seconds]
+      unitTime: [UnitTime.Seconds],
+      orderBy: [PathOrderBy.TotalMessage],
+      order: [Order.Descending],
     })
   }
 
@@ -112,4 +118,32 @@ export class WebhookListComponent implements OnInit {
     this.isTimerDropdownVisible.set(false);
     this.areTimerFiltersSelected.set(false);
   }
+
+  onOpenSelect() {
+    const { orderBy, order } = this.form.value;
+    this.webhookListService.retrievePaths$(orderBy, order).subscribe();
+  }
+
+  protected readonly PathOrderBy = PathOrderBy;
+  protected readonly Order = Order;
+
+  onUpdatePathQueryParams() {
+    const { orderBy, order } = this.form.value;
+    this.webhookListService.retrievePathsAndMessages$(orderBy, order).subscribe({
+      next: () => this.isPathDropdownVisible = !this.$isPathDropdownVisible()
+    });
+  }
 }
+
+export type PathOrderBy = 'totalMessage' | 'lastMessage';
+export const PathOrderBy = {
+    TotalMessage: 'totalMessage' as PathOrderBy,
+    LastMessage: 'lastMessage' as PathOrderBy,
+}
+
+export type Order = 'ascending' | 'descending';
+export const Order = {
+    Ascending: 'ascending' as Order,
+    Descending: 'descending' as Order,
+}
+

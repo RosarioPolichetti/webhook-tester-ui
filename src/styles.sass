@@ -1,3 +1,4 @@
+$primary-color: #001529
 $mobile-width: 600px
 
 
@@ -11,8 +12,31 @@ nz-layout
 
 nz-content
   padding: 24px 50px
+  @media only screen and (width > $mobile-width)
+    height: calc(100vh - 64px - 108px)
+    overflow-y: scroll
   & nz-empty
     margin: 32px auto !important
+  & div.toolbar-wrapper
+    position: sticky
+    top: -8px
+    z-index: 1
+    & > div
+      background-color: white
+      margin: 0 !important
+    & nz-select
+      width: calc(100% - 32px)
+    & button.setting
+      width: 32px !important
+
+nz-footer
+  background-color: $primary-color !important
+  & p
+    text-align: center
+    margin-bottom: 0 !important
+    color: white !important
+  & span
+    color: white !important
 
 .w-full
   width: 100%
@@ -23,5 +47,3 @@ nz-content
     max-width: 100%
     & > button
       width: 100%
-  nz-footer p
-    text-align: center

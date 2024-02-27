@@ -1,8 +1,9 @@
 import {Injectable, signal} from '@angular/core';
 import {HttpClientService} from "../http-client.service";
 import {finalize, interval, Subscription, switchMap, tap} from "rxjs";
-import {Message, UnitTime} from "./webhook-card/webhook.model";
+import {Message, Path, UnitTime} from "./webhook-card/webhook.model";
 import {UntilDestroy, untilDestroyed} from "@ngneat/until-destroy";
+import {Order, PathOrderBy} from "./webhook-list.component";
 
 
 @UntilDestroy()
@@ -10,15 +11,23 @@ import {UntilDestroy, untilDestroyed} from "@ngneat/until-destroy";
 export class WebhookListService {
   refreshSubscription: Subscription;
 
-  paths = signal<string[]>([]);
+  paths = signal<Path[]>([]);
   messages = signal<Message[]>([]);
 
   constructor(
     private httpClientService: HttpClientService
   ) { }
 
-  retrievePathsAndMessages$() {
-    return this.httpClientService.retrievePathsAndMessages$().pipe(
+  retrievePaths$(orderBy = PathOrderBy.TotalMessage, order = Order.Descending) {
+    return this.httpClientService.retrievePaths$(orderBy, order).pipe(
+      tap(paths => {
+        this.paths.set(paths);
+      })
+    );
+  }
+
+  retrievePathsAndMessages$(orderBy = PathOrderBy.TotalMessage, order = Order.Descending) {
+    return this.httpClientService.retrievePathsAndMessages$(orderBy, order).pipe(
       tap(resp => {
         this.paths.set(resp.paths);
         this.messages.set(resp.messages);
