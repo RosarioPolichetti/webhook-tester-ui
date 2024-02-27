@@ -12,8 +12,21 @@
   </nz-content>
   <nz-footer>
     <div nz-row nzJustify="center" [nzGutter]="[16, 16]">
-      <div nz-col>
-        <p>All rights reserved to Enrico Barbato and Rosario Polichetti</p>
+      <div nz-col nzSpan="24">
+        <p>All rights reserved to <a href="https://it.linkedin.com/in/enrico-barbato-460996101" target="_blank">Enrico Barbato</a> and <a target="_blank" href="https://it.linkedin.com/in/rosario-polichetti">Rosario Polichetti</a></p>
+      </div>
+      <div nz-col nzSpan="24">
+        <div nz-row nzJustify="center" [nzGutter]="[16, 16]">
+          <div nz-col>
+            <span nz-icon nzType="github" nzTheme="outline" class="icon-with-url" (click)="openUrl('https://github.com/oscarasco/webhook-tester')"></span>
+          </div>
+          <div nz-col>
+            <span nz-icon nzType="code-sandbox" nzTheme="outline" class="icon-with-url" (click)="openUrl('https://hub.docker.com/r/oscarasco/webhook-tester')"></span>
+          </div>
+          <div nz-col>
+            <span nz-icon nzType="file" nzTheme="outline" class="icon-with-url" (click)="openUrl(baseUrl + '/docs')"></span>
+          </div>
+        </div>
       </div>
     </div>
   </nz-footer>

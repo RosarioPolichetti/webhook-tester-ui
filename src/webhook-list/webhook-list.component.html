@@ -1,25 +1,29 @@
 <div nz-row [nzGutter]="[16, 16]">
-  <div nz-col nzSpan="24">
+  <div nz-col nzSpan="24" class="toolbar-wrapper">
     <div nz-row [nzGutter]="[32, 16]" nzAlign="middle" nzJustify="center">
       <div nz-col nzFlex="1">
         <nz-select
           nzMode="multiple"
           nzPlaceHolder="Select one or more paths"
+          [nzMaxTagCount]="1"
           [nzOptions]="options()"
           [(ngModel)]="selectedPaths"
-          class="w-full"
-        ></nz-select>
+          (nzOpenChange)="onOpenSelect()"
+        >
+        </nz-select>
+        <button nz-button nzType="primary" class="setting" (click)="isPathDropdownVisible = !$isPathDropdownVisible()"><span nz-icon nzType="setting"></span></button>
+
       </div>
-      <div nz-col>
+      <div nz-col class="filter-icon">
         <span
-      nz-icon
-      nzType="filter"
-      [nzTheme]="areFiltersSelected() ? 'twotone' : 'outline'"
-      (click)="isFilterDropdownVisible.set(!isFilterDropdownVisible())"
-    >
-    </span>
+          nz-icon
+          nzType="filter"
+          [nzTheme]="areFiltersSelected() ? 'twotone' : 'outline'"
+          (click)="isFilterDropdownVisible.set(!isFilterDropdownVisible())"
+        >
+        </span>
       </div>
-      <div nz-col>
+      <div nz-col class="clock-icon">
         <span
           nz-icon
           nzType="clock-circle"
@@ -63,6 +67,17 @@
   nzTitle="Filters"
   [nzContent]="filterContentTmpl"
   [nzFooter]="filterFooterTmpl"
+>
+</nz-modal>
+
+<nz-modal
+  #pathModal
+  [nzVisible]="$isPathDropdownVisible()"
+  (nzOnCancel)="isPathDropdownVisible = false"
+  (nzVisibleChange)="isPathDropdownVisible = !$isPathDropdownVisible()"
+  nzTitle="Paths"
+  [nzContent]="pathContentTmpl"
+  [nzFooter]="pathFooterTmpl"
 >
 </nz-modal>
 
@@ -156,6 +171,47 @@
     </div>
     <div nz-col>
       <button nz-button nzType="primary" (click)="onUpdateRefreshRate()">Save</button>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #pathContentTmpl>
+  <form nz-form [formGroup]="form">
+    <div nz-row [nzGutter]="[16, 8]" nzAlign="bottom">
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label>OrderBy</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="orderBy">
+              <nz-option [nzValue]="PathOrderBy.TotalMessage" nzLabel="Total message"></nz-option>
+              <nz-option [nzValue]="PathOrderBy.LastMessage" nzLabel="Last message"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div nz-col nzSpan="12">
+        <nz-form-item>
+          <nz-form-label>Order</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="order">
+              <nz-option [nzValue]="Order.Descending" nzLabel="Descending"></nz-option>
+              <nz-option [nzValue]="Order.Ascending" nzLabel="Ascending"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #pathFooterTmpl>
+  <div nz-row nzJustify="space-between" [nzGutter]="[16, 16]">
+    <div nz-col>
+      <button nz-button (click)="isPathDropdownVisible = !$isPathDropdownVisible()">Cancel</button>
+    </div>
+    <div nz-col>
+      <button nz-button nzType="primary" (click)="onUpdatePathQueryParams()">Save</button>
     </div>
   </div>
 </ng-template>
